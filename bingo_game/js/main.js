@@ -11,17 +11,16 @@
     let dispInt = 0;//ボタンを押した時に表示する要素の配列番号
     let resultsInt = [];//既に出た数字を入れる空の配列を定義
 
-    let testInterval;
-
-    function startInterval(){
-      testInterval = setInterval(()=>{
-        btn.textContent =  Math.floor(Math.random()*100);
-      },5)
-    }
+    let startInterval;　//
 
     function start(){
         btnId =1;
-        startInterval();
+        if(dispInt == maxInt-1){
+          window.alert('次が最後の数字です');
+      }
+        startInterval = setInterval(()=>{
+          btn.textContent =  Math.floor(Math.random()*100);
+        },5)
     }
 
 
@@ -43,7 +42,9 @@
           array[i] = j;　//保持しておいたarray[rnd]を代入
         }
         console.log(array);
-        dispInt =0;
+
+        //最大値を変更したら各値をリセット
+        dispInt =0;　
         resultsInt = [];
         results.textContent ="";
 
@@ -52,27 +53,23 @@
 
     //結果を表示させる関数
     function stop(){
-        clearInterval(testInterval);
+        clearInterval(startInterval);　//ルーレット停止
         btn.textContent = array[dispInt]; //ボタンを押した回数に対応した配列番号の要素を表記
         resultsInt.unshift(array[dispInt]); //その数値を既に出た数値の配列に代入
 
-        if(dispInt == maxInt){
-          window.alert('これが最後の数字です');
-          btn.textContent = "END";
-          dispInt +=1 ;
-
-        }else if(dispInt <= maxInt){
+      if(dispInt < maxInt){
           const div = document.createElement('div');
           div.classList.add(`resultBall${dispInt}`); //divにresultBall+番号のクラスネームをつける
           document.getElementById('results').appendChild(div);　//
-          div.textContent = array[dispInt];　//ボタンを押すごとに増えるその配列を表記
+          div.textContent = array[dispInt];　//それぞれの番号に対応する数値をボールに表記
           dispInt +=1;　//ボタンを押した回数を記録
 
-        }else if(dispInt > maxInt){
+        }else if(dispInt >= maxInt){
           const div = document.createElement('div');
           div.classList.add(`resultBall${dispInt}`); //divにresultBall+番号のクラスネームをつける
-          document.getElementById('results').appendChild(div);　//
-          div.textContent = ("終");//ボタンを押すごとに増えるその配列を表記
+          document.getElementById('results').appendChild(div);　//子要素として追加
+          div.textContent = "終";　//もう終わりなのでそれを表記
+          btn.textContent = "END";
         }
         btnId = 0;
       }
