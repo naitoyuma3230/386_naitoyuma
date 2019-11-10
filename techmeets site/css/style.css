@@ -1,0 +1,279 @@
+@charset "UTF-8";
+body{
+	padding: 0;
+	margin: 0;
+	background-color: rgb(138, 129, 139);
+	position: absolute;
+}
+#Header {
+position: fixed; /* ヘッダーを固定する */
+top: 0; /* 上部から配置の基準位置を決める */
+left: 0; /* 左から配置の基準位置を決める */
+width: 100%; /* ヘッダーの横幅を指定する */
+height: 70px; /* ヘッダーの高さを指定する */
+/* ヘッダーの余白を指定する(上下左右) */
+background-color: rgb(49, 127, 176, 0.5); /* ヘッダーの背景色を指定する */
+z-index: 10;
+}
+#header-t{
+	color: white;
+	float: left;
+}
+#header-t h4{
+	font-size: 30px;
+	margin: 10px 0 0 0;
+	text-align: center;
+}
+#header-t p{
+	line-height: 0.5;
+}
+#icon{
+	width:60px;
+	float: right;
+	margin:5px 20px;
+}
+#main-image{
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+#main-image h1{
+	position: absolute;
+	top: 70%;
+	left:50%;
+	transform: translate(-50%,-60%);
+	color: white;
+	opacity: 0.8;
+}
+#scroll{
+	position: absolute;
+	top: 90%;
+	left:50%;
+	transform: translate(-50%,-80%);
+	color: white;
+	font-size: 20px;
+	line-height: 0.5;
+	text-align: center;
+	opacity: 0.8;
+}
+#action{
+	margin-top: 10px;
+	line-height: 2;
+	color: white;
+	text-align: center;
+	height: 250px
+}
+#action-t :first-child{
+	font-size: 30px;
+	margin-bottom: 0;
+}
+#sub-image{
+	flex-wrap: wrap;
+	line-height: 0;
+}
+#sub-image img{
+	height: 100px;
+	width: 25%;
+	object-fit: cover;
+}
+#works{
+	width: 100%;
+	height: 600px;
+	background-image: url(images/1505273212698.jpg);
+	background-color: rgb(125, 24, 24);
+	padding-top: 20px;
+	color: white;
+}
+#works h1{
+	color: white;
+	text-align: center;
+	margin:0px 0 20px 0;
+
+}
+#coming{
+	width: 95%;
+	height: 400px;
+	background-color: rgba(71, 89, 82, 0.3);
+	margin: auto;
+	position: relative;
+}
+#coming p{
+	display: block;
+	font-size: 30px;
+	color: white;
+	position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+#coming-t{
+	margin: 20px;
+	line-height: 0.5;
+}
+#coming-t p{
+	font-size: 12px;
+}
+#about{
+	text-align: center;
+	color: white;
+	padding-bottom: 20px;
+}
+#about h1{
+	display: block;
+	width: 200px;
+	color: white;
+	border-bottom: solid 2px white;
+	margin:20px auto;
+}
+#naito h4{
+	margin-bottom: 0;
+}
+#naito p{
+	margin:10px 0 20px;
+}
+#naito :last-child{
+	margin-bottom: 40px;
+}
+#tokyo{
+	margin-bottom: 40px;
+}
+#contact{
+	background-color: rgb(125, 24, 24);
+	color: white;
+	padding-top: 20px;
+}
+#contact h1{
+	text-align: center;
+}
+.contact{
+	padding: 30px;
+}
+.form-gloup{
+	margin: 20px;
+}
+input.form-control.info{
+	height: 100px;
+}
+.btn{
+	width: 100px;
+	display: block;
+	margin: 10px auto;
+}
+.btn-square {
+	width: 150px;
+	height: 40px;
+  display: block;
+	text-align: center;
+	margin: auto;
+  padding: 0.5em 1em;
+  text-decoration: none;
+	color: white;
+  background: rgba(39, 55, 42, 0.78);/*ボタン色*/
+  border-bottom: solid 4px rgba(63, 65, 57, 0.65);
+  border-radius: 3px;
+}
+.btn-square:hover{
+	text-decoration: none;
+	cursor:pointer;
+}
+.btn-square:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);/*下に動く*/
+  border-bottom: none;/*線を消す*/
+}
+#contact p{
+	margin: 40px 0 0 0;
+	padding: 10px;
+	font-size: 20px;
+	text-align:center;
+	background-color: rgb(7, 51, 145);
+}
+#page_top{
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background: black;
+  opacity: 0.6;
+  border-radius: 50%;
+	margin: 10px;
+}
+#page_top a{
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+  text-decoration: none;
+}
+#page_top a::before{
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: '\f106';
+  font-size: 25px;
+  color: #fff;
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: -10px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+}
+#copy{
+	height: 200px;
+	padding: 20px;
+	text-align: center;
+	margin: 0;
+	background-color: white;
+}
+#copy #action-t{
+	padding-top:20px;
+	margin-bottom: 30px;
+}
+#praivacy{
+	text-align: center;
+	color: white;
+	height: 250px;
+	position: relative;
+}
+#praivacy-t{
+	position: absolute;
+	top:50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+#text-container{
+	padding: 50px;
+	background-color: white;
+}
+.text{
+	margin: 30px 0;
+	font-size: 15px;
+	line-height: 2;
+}
+.text :first-child{
+	font-weight: bold;
+}
+#list{
+	font-size: 15px;
+	line-height: 2;
+	padding:0 0 0 20px;
+}
+#otoi{
+	margin: 60px 0 0;
+}
+#rich{
+	margin-top:30px;
+}
+#top{
+	height: 30px;
+	font-size: 20px;
+	text-align: center;
+	background-color:rgb(7, 51, 145);
+}
+#top a:hover{
+	text-decoration: none;
+}
