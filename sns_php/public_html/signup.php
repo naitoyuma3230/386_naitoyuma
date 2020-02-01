@@ -21,7 +21,8 @@ $app->run();
     <div id="container">
       <form action="" method="post" id="signup">
         <p>
-          <input type="text" name="email" placeholder="email">
+          <input type="text" name="email" placeholder="email" value="<?=
+          isset($app->getValues()->email) ? h($app->getValues()->email) : ''; ?>">
         </p>
         <p class = "err"><?= h($app->getErrors('email')); ?></p>
         <p>
@@ -30,7 +31,8 @@ $app->run();
         <p class = "err"><?= h($app->getErrors('password')); ?></p>
 
         <div class="btn" onclick="document.getElementById('signup').submit();">Sign Up</div>
-        <!-- クリックアクションでFormのid='signup'を取得してsubmit関数を実行。Signup.phpによりメッセージ表記 -->
+        <!-- クリックアクションでFormのid='signup'を取得してsubmit関数を実行。
+        Signup.phpはPostでのリダイレクトでform情報の検証エラーメッセージの受け取った取りを行う-->
         <p class="fs12"><a href="/login.php">Log In</a></p>
       </form>
 

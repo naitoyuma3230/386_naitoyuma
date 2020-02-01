@@ -5,24 +5,38 @@ namespace MyApp;
 class Controller{
 
   private $_errors;
+  private $_values;
 
   public function __construct(){
   /*__construct:クラスからオブジェクトの作成(new）の際に自動的に実行されるメソッド*/
     $this->_errors = new \stdClass();
+    $this->_values = new \stdClass();
+    // $this->_values = new \stdClass();
     // new stdClass:クラス定義なしでオブジェクトを作成可能.オブジェクトのメソッドの形で関数を実行できる
-    // $this->_errors->メソッド()
+  }
+
+  protected function setValues($key, $value){
+    $this->_values->$key = $value;
+  }
+
+  public function getValues(){
+    return $this->_values;
   }
 
   protected function setErrors($key, $error){
     $this->_errors->$key = $error;
+    // $this(class Controler)->_errors(stdClassのインスタンス)->$key(そのプロパティ)
   }
 
   public function getErrors($key){
     return isset($this->_errors->$key) ? $this->_errors->$key :'';
+    // 三項演算子：式1 ? 式2 : 式3
+    // 式1がtrue->式2. false->式3
   }
 
   protected function hasError(){
     return !empty(get_object_vars($this->_errors));
+    // get_object_vars:オブジェクト内のプロパティを取得
   }
 
   protected function isLogeedIn(){/*protectedは同クラス内からのみアクセス可能（Extends：サブクラスは不可）*/
