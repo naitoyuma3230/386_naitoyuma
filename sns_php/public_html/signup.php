@@ -34,6 +34,9 @@ $app->run();
         <!-- クリックアクションでFormのid='signup'を取得してsubmit関数を実行。
         Signup.phpはPostでのリダイレクトでform情報の検証エラーメッセージの受け取った取りを行う-->
         <p class="fs12"><a href="/login.php">Log In</a></p>
+        <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
+        <!-- Signup.phpで設定された$_SESSION['token']の値をForm情報としてPost送信 -->
+
       </form>
 
     </div>

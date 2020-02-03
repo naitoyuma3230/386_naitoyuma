@@ -69,6 +69,11 @@
         // exit;
     }
       private function _validate(){
+        if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']){
+          echo "Invaild token!";
+          exit;
+        }
+
         if (!filter_var($_POST['email'] , FILTER_VALIDATE_EMAIL)){
           /*filter_var('info@wepicks.net', FILTER_VALIDATE_EMAIL)
           filter_var:データ検証メソッド （第一引数：チェックしたい変数 第二引数：FILTER_VALIDATE.オプション)*/

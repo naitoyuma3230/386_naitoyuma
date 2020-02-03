@@ -8,6 +8,11 @@ class Controller{
   private $_values;
 
   public function __construct(){
+    if(!isset($_SESSION['token'])){
+      $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(16));
+      // bin2hex:指定した文字列を16進数に変換する
+      // openssl_random_pseudo_bytes(16):ランダム性の高い32桁の数列
+    }
   /*__construct:クラスからオブジェクトの作成(new）の際に自動的に実行されるメソッド*/
     $this->_errors = new \stdClass();
     $this->_values = new \stdClass();
