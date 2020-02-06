@@ -1,5 +1,6 @@
 <?php
 
+// new ブランチで管理テスト
 namespace MyApp;
 
 class Controller{
