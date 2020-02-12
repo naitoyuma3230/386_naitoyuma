@@ -61,13 +61,23 @@
           return;
         }else{
      // create user
-
-      // redirect to login
-
+        try {
+          $userModel = new \MyApp\Model\User();
+          $userModel->create([
+            'email' => $_POST['email'],
+            'password' => $_POST['password']
+          ]);
+        } catch (\MyApp\Exception\DuplicateEmail $e) {
+          $this->setErrors('email', $e->getMessage());
+          return;
         }
-        // echo "success";
-        // exit;
-    }
+
+        // redirect to login
+        header('Location: ' . SITE_URL . '/login.php');
+        exit;
+        }
+      }
+      
       private function _validate(){
         if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']){
           echo "Invaild token!";

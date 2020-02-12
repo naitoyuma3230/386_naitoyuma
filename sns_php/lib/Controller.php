@@ -49,7 +49,7 @@ class Controller{
     // $_SESSION['me']
     // SESSION： webサイトへのアクセスからブラウザを閉じるまでの一連の行動
     // webで用いられるHTTPプロトコルには状態を管理する機能がないため$_SESSION関数を使用する
-    // SESSIONはサーバーサイド　Cookieはクライント側が保持する
+    // SESSIONはサーバーサイド Cookieはクライント側が保持する
     return isset($_SESSION['me']) && !empty($_SESSION['me']);/*戻り値：Yes or No*/
   }
 
