@@ -53,4 +53,8 @@ class Controller{
     return isset($_SESSION['me']) && !empty($_SESSION['me']);/*戻り値：Yes or No*/
   }
 
+  public function me(){
+    return $this->isLogeedIn() ? $_SESSION['me'] : null;
+  }
+
 }
