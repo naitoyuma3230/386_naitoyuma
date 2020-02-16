@@ -6,7 +6,7 @@ class ImageUploader{
 
     private $_imageFileName;
     private $_imageType;
-    
+
     public function upload(){
         try{
             // error check
@@ -24,7 +24,7 @@ class ImageUploader{
 
             // create thubnail
             $this->_createThumbnail($savePath);
-        
+
 
         }catch(\Exception $e){
             echo $e->getMessage();
@@ -37,13 +37,13 @@ class ImageUploader{
 
     private function _createThumbnail($savePath){
         $imageSize = getimagesize($savePath);
-        // [0] => width(px), [1] => height 
+        // [0] => width(px), [1] => height
         // 1.getimagesize:ソース画像のサイズ取得
         $width = $imamgeSize[0];
         $height = $imageSize[1];
 
         if($width > THUMBNAIL_WIDTH){
-            $this->_createThumbnailMain($savePath, $width, $height);        
+            $this->_createThumbnailMain($savePath, $width, $height);
         }
     }
 
@@ -69,7 +69,7 @@ class ImageUploader{
             $thumbHeight, $width, $height);
             // 2.imagecopyresampled：画像のコピー、伸縮
             // (ソース画像, サムネイルID, ソース画像始点x, y, サムネイル始点x, y,ソース画像横長,縦長)
-            
+
             switch($this->imageType){
             // 3.imagejpeg：出力
                 case IMAGETYPE_GIF:
@@ -84,7 +84,7 @@ class ImageUploader{
             }
 
         }
-        
+
 
     private function _save($ext){
         $this->_imageFileName = sprintf(
@@ -115,7 +115,7 @@ class ImageUploader{
         $images = [];
         $files = [];
         $imageDir = opendir(IMAGES_DIR);
-        while(false ==='.')
+        while(false ==='.');
     }
 
 
