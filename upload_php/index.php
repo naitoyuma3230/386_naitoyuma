@@ -1,5 +1,9 @@
 <?php
 
+
+session_start();
+// session_start():セッション作成,リクエスト上で GET, POST,クッキーにより渡された
+// セッション ID に基づき現在のセッションを復帰
 ini_set('display_errors', 1);
 define('MAX_FILE_SIZE', 1 * 1024 * 1024); // 1MB
 define('THUMBNAIL_WIDTH', 400);
@@ -23,8 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$uploader->upload();
 }
 
-$images = $uploader->getImages();
+list($success, $error) = $uploader->getResults();
 
+$images = $uploader->getImages();
+// $files = $uploader->getImages();
+// var_dump($images);
+// var_dump($files);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -44,25 +52,77 @@ $images = $uploader->getImages();
 	li {
 	margin-bottom: 5px;
 	}
+
+
+	input[type=file]{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+		opacity: 0;
+		/* divの中に入れて隠す->マウスポイントは機能している */
+	}
+	.btn{
+		position: relative;
+		display: inline-block;
+		width: 300px;
+		padding: 7px;
+		border-radius: 5px;
+		margin: 10px auto 20px;
+		color: #fff;
+		box-shadow:0 4px #0088cc;
+		background: #00aaff;
+	}
+	.msg{
+		margin:0 auto 15px;
+		width: 400px;
+		font-weight: bold;
+	}
+	.msg.success {
+		color:#4caf50;
+	}
+	.msg.error{
+		color:#f44336;
+	}
 </style>
 </head>
 <body>
+<div class="btn">
+	Uplod!
+	<form action="" method="post" enctype="multipart/form-data" id="my_form">
+		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo h(MAX_FILE_SIZE); ?>">
+		<input type="file" name="image" id="my_file">
+	</form>
+</div>
+<?php if (isset($success)) : ?>
+	<div class="msg success"><?php echo h($success); ?></div>
+<?php endif; ?>
+<?php if (isset($error)) : ?>
+	<div class="msg error"><?php echo h($error); ?></div>
+<?php endif; ?>
 
-<form action="" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo h(MAX_FILE_SIZE); ?>">
-	<input type="file" name="image">
-	<input type="submit" value="upload">
-</form>
+
 
 <ul>
 	<?php foreach ($images as $image) : ?>
-		<li>
-		<a href="<?php echo h(basename(IMAGES_DIR)) . '/' . basename($image); ?>">
+	<li>
+		<a href="<?php echo h(basename(IMAGES_DIR)) . '/' . h(basename($image)); ?>">
+		<!-- リンクの作成	相対パス(フォルダ名:imaes . / .  ファイル名:15823556...jpg) -->
 			<img src="<?php echo h($image); ?>">
 		</a>
 	</li>
 	<?php endforeach; ?>
 	</ul>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		$(function(){
+			$('.msg').fadeOut(3000);
+			$('#my_file').on('change', function(){
+				$('#my_form').submit();
+			});
+		});
+	</script>
 </body>
 </html>

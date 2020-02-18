@@ -25,14 +25,59 @@ class ImageUploader{
             // create thubnail
             $this->_createThumbnail($savePath);
 
-
+            $_SESSION['success'] = 'Upload Done';
         }catch(\Exception $e){
-            echo $e->getMessage();
-            exit;
+            $_SESSION['error'] = $e->getMessage();
+            // exit;
         }
         // redirect
         header('Location: http://' . $_SERVER['HTTP_HOST']);
         exit;
+    }
+
+    public function getResults(){
+        $success = null;
+        $error = null;
+        if (isset($_SESSION['success'])){
+            $success = $_SESSION['success'];    /* ='Upload Done'*/
+            unset($_SESSION['success']);    /*unsetしないとredirectしてもSESSIONに保持され続ける*/
+        }
+        if (isset($_SESSION['error'])){
+            $error = $_SESSION['error'];    /* =各種エラーメッセージを渡す*/
+            unset($_SESSION['error']);
+        }
+        return [$success, $error];
+    }
+
+    public function getImages(){
+    // THUMBNAIL_DIRをOpen->fail名取得->絶対Path取得  もしfile名が見つからなければIMAGES_DIRから絶対Path取得
+        $images = [];/*フォルダ名/ファイル名の配列*/
+        $files = [];/*ファイルの絶対パスの配列*/
+        $imageDir = opendir(IMAGES_DIR);
+        // ファイルを参照するため、ディレクトリを開いている状態にする。（Resource型データ：DirHandle=Open）
+        // Open時、echo Resource id #2を返し、$imageDirに格納して保持
+        while(false !== ($file = readdir($imageDir))){
+            // readdir:HnadelがOpenのディレクトリ内のfileを1つずつ取得し返す。（出力する順番はバラバラ）
+            // $fileには_createThumbnail()で作成したファイル名が出力される
+            if($file === '.' || $file === '..'){
+            // 出力したfile名の中に親ディレクトリやカレントディレクトリを示す'.'や'..'が入っても処理を継続
+                continue;
+            }
+            // 取得したfile名:$faileを$filesに配列の形で追加
+            $files[] = $file;
+            if(file_exists(THUMBNAIL_DIR . '/' . $file)){
+                $images[] = basename(THUMBNAIL_DIR) . '/' . $file;
+                // basename (ファイル名を取得したいパス [, 除外したい接尾語])
+                // 指定したパスからファイル名を取得（接尾語を指定したらそれを除く）
+            }else{
+                $images[] = basename(IMAGES_DIR) . '/' . $file;
+            }
+        }
+        array_multisort($files, SORT_DESC, $images);
+        // 配列のソート $filesと$imagesを降順にソート
+        // ファイル名の先頭には時刻が入っているので、投稿が古い順に並ぶ
+        // array_multisort(ソート対象（$array）, ソート順(SORT_DEC=降順) ,次のソート対象, 次の…
+        return $images;
     }
 
     private function _createThumbnail($savePath){
@@ -72,6 +117,10 @@ class ImageUploader{
 
             switch($this->imageType){
             // 3.imagejpeg：出力
+            // imagejpeg ( resource $image [, mixed $to [, int $quality ]] )
+            // $image:imagecreatetruecolorが返した画像リソース（この時点ではまだ画像データでない）
+            // $to:ファイル保存先のパス 未設定でimageストリームを返す（ストリーム：本流）
+            // $quality:0～100までデータ量量と画質バランスの設定
                 case IMAGETYPE_GIF:
                     $srcImage = imagegif($thumbImage,THUMBNAIL_DIR . '/' . $this->_imageFileName);
                 break;
@@ -81,8 +130,8 @@ class ImageUploader{
                 case IMAGETYPE_PNG:
                     $srcImage = imagepng($thumbImage,THUMBNAIL_DIR . '/' . $this->_imageFileName);
                 break;
+                // 出力成功で返り値：true
             }
-
         }
 
 
@@ -108,14 +157,6 @@ class ImageUploader{
         }
         return $savePath;
         // savePath=フォルダパス/ファイル名
-
-    }
-
-    public function getImages(){
-        $images = [];
-        $files = [];
-        $imageDir = opendir(IMAGES_DIR);
-        while(false ==='.');
     }
 
 
