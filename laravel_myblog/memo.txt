@@ -1,0 +1,242 @@
+.envファイル設定
+    DB_CONECTIONをsqliteに変更
+    sqliteの場合は  DB_HOST―DBからPASSWORDまで削除
+
+[サーバーの立ち上げ]
+    php artisan serve --host=192.168.33.10 --port=8000
+
+
+
+[sqliteの特徴]
+    ファイル1つで複製、編集などの管理が可能
+    サーバー上にデータベースを作成する必要がなく、アップロードするディレクトリ内に置いとけばいい
+    デメリットはユーザー管理パスワードがなく、ファイル形式なので同時書き込みができないため、大規模なチーム開発に向かない
+
+
+[app.phpの設定]
+    .envを参照している
+    timezone =>'Asia/Tokyoに変更
+    locale =>'ja'   日本語に変更
+
+[Model作成]
+    ModelはDBに対するQuery：問い合わせや命令文  を実効する
+    Appディレクトリ内にPostモデルを作成
+
+    --migrationコマンドでデータベースのmigrationFileを同時に作成
+    
+    php artisan make:model Post --migration
+
+    protected $fillable = ['title', 'body']
+    カラムへの書き込みを許可する
+
+    コメント機能
+    コメント用のモデルとmigrationFileを新しく作成
+    php artisan make:model Comment --migration
+
+    postデータとの紐づけを設定
+    comment.php
+    public function post(){
+        return $this->belongTo('App\Post'); /*commentに対して紐づくpostデータは単体
+
+    post.php
+    public function comments(){
+        return $this->hasMany('App\coment'); 一方postに対して紐づくcommentデータは複数
+    }
+    
+
+
+[migration]
+    データベースのバージョン管理を行うための機能
+    up()で変更処理  down()で巻き戻し処理を行う
+    
+    up()
+        model名を複数形にした$tableを作成
+        連番で付けられる主キーの'id'と'timestamp'が最初から設定されている
+
+        新しいcolumnの追加
+        $table->string('title'); SQLのvarcharはstring
+        $table->text('body');などで簡易的に追加できる
+
+    実行は
+    php artisan migrate
+
+    新しいMigrationファイルの追加
+    Postsテーブルと紐づけのIDを作成
+
+
+[Eloquent]
+    データベースとモデルを対応づける機能
+    sqlを意識しなくても直観的に操作可能
+
+    データベースやテーブル自体に関する設定はモデルに記述
+    レコードの出し入れに関してはコントローラに記述
+
+[tinker]
+    対話型コンソール
+
+    データベースのカラム毎の編集
+    作成したモデルのインスタンスを作成 モデル名Post
+    プロパティの操作、sql文と同じ感覚で編集可能
+    $Post->save();  保存
+
+    データベースの呼び出し
+    App\Post::all();     スコープ定義演算子：：＝  クラス定数、静的なメソッドにアクセス
+    App\Post::all()->toArray(); 全て呼び出し
+
+    App\Post::find(1)->toArray(); id番号で呼び出し  
+    App\Post::where('id', '>', 1)->get()->toArray(); where文で呼び出し
+    App\Post::orderBy('created_at','desc')->get()->toArray(); orderBy文で並び変え
+    App\Post::where('id', '>', 1)->take(1)->get()->toArray(); takeでカラム数指定
+    
+    データベースの作成
+    App\Post::create(['title' => 'title 2', 'body' => 'body 2']);
+
+    ↑ モデルファイルのセキュリティ設定を解除
+    protected $fillable = ['title', 'body'];
+
+    データベースの削除
+    $post->delete();
+
+[Routing]
+    URL毎に処理を割り振る
+
+    Route/Web.phpで設定
+
+    Route::get('/','PostsController@index');
+    get:getメソッドではURL/の末尾でルーティングを決定する
+    '/':末尾未設定で（デフォルト）
+    PostsController:コントローラークラスの@index:メソッドを実効するという設定
+
+    Route::get('/posts/{id}', 'PostsController@show'); を追加
+    '/'+'id'でPostsControllerの@showメソッドを実効
+    { }でメソッド渡される変数を括る
+
+    Routingは上から順番に検証、実効される
+
+    引数post = createと判断されるとcreateメソッドが実行されない
+    Route::get('/posts/{post}', 'PostsController@show')->where('post','[0-9]+');
+    Route::get('/posts/create', 'PostsController@create');
+    ->where('post','[0-9]+');   変数postについては0～9までの数字指定
+
+
+
+
+[Controller]
+    php artisan make:controller PostsController  
+    App/Http/controllerディレクトリにコントローラーを作成
+    
+    PostsControllerクラスにindexメソッドを設定
+    
+    データベースの抽出
+    indexメソッド内にデータ取得の設定
+    use App\Post として App\Posts->Postsに省略してすっきり
+    $posts = \App\Post::all();  tinkerでの操作と同様にPostモデルのインスタンスを作成し操作
+    
+    $posts = Post::oderBy('created_at', 'desc')->get();
+    ↑と一緒 $posts = Post::latest()->get();
+
+    dd(); dump and die:Laravelのデバック用メソッド  var_dumpの上位互換
+    
+    Viewの呼び出し
+    indexメソッドに記載
+    return view('posts.index');   viwesディレクトリ内でposts/index.blade.php  
+                                  /でなく.区切りに注意
+
+    viewに抽出したデータを反映
+    return view('post.index', ['posts' => $posts]); 
+    return view('post.index')->with('posts', $posts);
+    $postsの内容をView内で'posts'として使用できる
+
+    Viewの追加
+    $post = Post::findOrFaill($id); find()でデータ取得できなかったらエラーを返す
+    return  view('posts.index')->with('posts', $posts);
+
+   Implicit Binding
+    リクエストURIの対応する値に一致するIDを持つ、モデルインスタンスを自動的に参照する機能
+
+    Route::get('/posts/{post}', 'PostsController@show');
+    ルーティングのルートパラメーターをpostに設定
+    public function show(Post $post){
+        Postモデルを指定すればデータベースからIDを自動的に参照し$post変数に渡せる
+        $post = Post::findOrFail($id);でIDを引っ張ってくる必要がない
+
+        return view('posts.show')->with('post', $post);
+    }
+
+    public function store(Request $request){
+        formから送信されたデータはRequestモデルで指定でき、$requestに格納
+        $post = new Post();
+        Postモデルのインスタンスを作成、データベース操作の準備
+        $post->tiele = $request->title;
+        $post->body = $request->body;
+        $post->save();
+        新しいデータの保存が完了
+    }
+
+    Validate
+    コントローラークラスにデフォルト設定のValidateメソッド
+    validate($requestデータが格納された変数,  各カラム => オプション
+    $this->vliate($request,[  
+            'title' => 'required|min:3', requered：未入力でエラー  |min:3 最低３文字
+            'body' => 'required'
+        ]);
+    Requestを作成する事で共通の処理を設定可能->PostRequestの作成
+
+    エラーメッセージは$error->body,$error->titleに渡される
+
+[View・blade]
+    blade:利点はテンプレートの継承、セクション
+
+    resorces/viewsディレクトリにcontrollerに設定したアクションに対応した名前で用意する
+    postsディレクトリ作成/index.blade.php
+
+    cssはpublicディレクトリにcss/styler.cssを作成し参照する
+
+    bladeのデフォルト定義メソッド
+    @foreatch   @endforeatch 
+    @forelse    @empty  @endforelse
+    @if @endif
+    {{ old() }}  フォームのインプットが過去の値を保持
+    {{$var}} エスケープ
+    {{ method_field('patch') }} Patchメソッドでのルーティングでフォームに埋め込み
+
+    e() エスケープ  htmlspwcialchars
+    nl2br() 引数の文字列に含まれる改行文字(\r\n,\n\r,\n ,\r)の前に<br/>,<br>を挿入
+    テキストによっては改行が含まれるため、エスケープにより改行文字が表記されてしまうため
+
+    リンクの作成
+    href="/posts/{{ $post->id }}"
+    href="{{  url('/posts', $post->id) }}"
+    2つは全く同じ
+    
+    href="{{ action('PostsController@show', $post->id) }}"
+    URLメソッド：action(コントローラー@アクション名,[id => 1]);
+    指定されたコントローラーアクションのURLを作成。
+    メソッドがルートパラメーターを受け付ける場合は第２引数で指定
+
+    Implicit Binding
+    href="{{ action('PostsController@show', $post) }}"
+    アクションに引き渡す変数についても$postを指定すればIDをコントローラー側で自動検出
+
+    継承・セクション
+    @extends('layouts.default') layouts/default
+
+    セクションを設定
+    @section('title')
+    Blog Posts
+    @endsection
+    もしくは@section('title', 'Blog Posts')
+
+    @yield('title)でイールズで表記
+
+    CSRF
+    {{ csrf_field() }}:Form内でトークン値を持つ隠し入力フィールドを作成
+
+
+[Requestクラス]
+php artisan make:request PostRequest
+app/Http/request/にPostRequest.phpを作成
+
+validationの設定クラスを編集する
+認証の制限なしauthorize() ->true
+validationのルール rules()に記載
