@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>jQuery</title>
+</head>
+<body>
+    <p>jQueryの練習</p>
+    <ul id="main">
+        <li>0</li>
+        <li class="item">1</li>
+        <li>2</li>
+        <li>3
+            <ul id="sub">
+                <li>3-0</li>
+                <li>3-1</li>
+                <li class="item">3-2</li>
+                <li class="item">3-3</li>
+                <li>3-4</li>
+            </ul>
+        </li>
+    </ul>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        //セレクタ、メソッド
+        //$("")
+        //html要素 p h1 ul
+        //class .item
+        //> :直下の子要素
+        //  :それ以下の要素
+        //, :複数の要素
+        //+ :隣接する要素
+        // $("#main > .item").css('color', 'red');
+        // $("p, .item").css('color', 'red');
+        // $(".item + .item").css('color', 'red');
+
+        //フィルタ
+        // :ep()
+        // :gt(),  :lt()
+        // :even, :odd
+        // :contains()
+        // :first, :last
+
+        // $("#sub > li:eq(2)").css('color', 'red');   /*sub > 二番目*/
+        $("#sub > li:gt(1)").css('color', 'red');
+
+    </script>
+</body>
+
+
+
+
+
+
+</html>

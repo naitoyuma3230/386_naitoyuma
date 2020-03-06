@@ -45,14 +45,15 @@ z-index: 10;
 	color: white;
 	opacity: 0.8;
 }
-#scroll{
+#scroll {
+	width: 100%;
 	position: absolute;
 	top: 90%;
 	left:50%;
 	transform: translate(-50%,-80%);
 	color: white;
 	font-size: 20px;
-	line-height: 0.5;
+	line-height: 1.5;
 	text-align: center;
 	opacity: 0.8;
 }
@@ -91,6 +92,7 @@ z-index: 10;
 
 }
 #coming{
+	text-align: center;
 	width: 95%;
 	height: 400px;
 	background-color: rgba(71, 89, 82, 0.3);
