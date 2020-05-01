@@ -1,6 +1,6 @@
 <?php
-define('DB_DATEBASE','paizadb');
-define('DB_USERNAME','paizadb_user');
+define('DB_DATEBASE','rpgdb');
+define('DB_USERNAME','rpgdb_user');
 define('DB_PASSWORD','1071');
 define('PDO_DSN','mysql:dbhost=localhost;dbname=' . DB_DATEBASE);
 $pdo = new PDO(PDO_DSN, DB_USERNAME, DB_PASSWORD );

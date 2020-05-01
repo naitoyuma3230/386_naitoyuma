@@ -18,6 +18,9 @@ body{
   box-shadow: 0px 10px 0 #d1483e;
   user-select: none;
 }
+#btn-container{
+  width: 100%;
+}
 #btn:hover{
   opacity: 0.9;
 }
