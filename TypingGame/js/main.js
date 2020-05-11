@@ -4,11 +4,23 @@
 
   //タイピングの課題単語を数列で設定
   const words = [
-    'apple',
-    'sky',
-    'blue',
-    'middle',
-    'set',
+    'ruby',
+    'python',
+    'php',
+    'java',
+    'javascript',
+    'jquery',
+    'nodejs',
+    'linux',
+    'centos',
+    'vagrant',
+    'apache',
+    'mysql',
+    'laravel',
+    'docker',
+    'xampp',
+    'hoge',
+    'vscode',
   ];
   let word ;
   let loc ;
@@ -22,13 +34,13 @@
   const timerLabel = document.getElementById('timer');
 
 
-  const timeLimid = 30*1000;　//タイムリミッドを設定。ミリ秒単位
+  const timeLimid = 30*1000;  //タイムリミッドを設定。ミリ秒単位
   let startTime ;
   let isPlaying = false;
 
   //タイピングの結果発表
   function showResult() {
-    　//条件演算子　スコアとミスの和が0なら0％を、その他は正解率をアラートで表記
+    //条件演算子  スコアとミスの和が0なら0％を、その他は正解率をアラートで表記
       const accuracy = score + miss === 0 ? 0 : score / (score + miss) * 100;
       //toFixedで小数点以下2桁表記
       alert(`${score} letters, ${miss} misses, ${accuracy.toFixed(2)}% accuracy!`);
@@ -41,7 +53,7 @@
     timerLabel.textContent = (timeLeft/1000).toFixed(2);　//小数第二位まで表記
     const timeoutId = setTimeout(()=>{
       updateTimer();
-    },10);　//setTimeoutでupdateTimerを10ミリ秒ごとに回して、
+    },10);//setTimeoutでupdateTimerを10ミリ秒ごとに回して、
     if(timeLeft <= 0){
       clearTimeout(timeoutId);
       timerLabel.textContent = '0.00';

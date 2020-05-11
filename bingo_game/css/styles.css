@@ -8,7 +8,6 @@ body{
   background: #ef454a;
   border-radius:50%;
   margin:30px auto 0;
-  float: left;
   text-align: center;
   line-height: 200px;
   color: #fff;
@@ -18,9 +17,6 @@ body{
   box-shadow: 0px 10px 0 #d1483e;
   user-select: none;
 }
-#btn-container{
-  width: 100%;
-}
 #btn:hover{
   opacity: 0.9;
 }
@@ -29,16 +25,22 @@ body{
   box-shadow: 0 5px 0 #d1483e;
   margin-top:35px;
 }
+#int{
+  width: 100%;
+}
+#ex{
+  text-align: center;
+}
 input{
-  margin-left: 150px;
+  text-align: center;
+  height: 40px;
+  width: 80px;
   font-size: 30px;
-  width: 70px;
 }
 #results{
   word-break: break-all;
-  width: 300px;
-  float: left;
-  margin: 20px 50px;
+  width: 100%;
+  margin: 50px 50px;
   font-size: 30px;
 }
 #results  *{
@@ -50,7 +52,7 @@ input{
   height: 50px;
   color: white;
   font-size: 30px;
-  margin: 5px 10px;
+  margin: 10px 10px;
   border-radius: 50%;
   background-color: #ef454a
 }
