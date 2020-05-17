@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>React Practice</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    (() =>{
+      class App extends React.Component{
+        // コンストラクタ内でのみstateの変更が可能
+        constructor(){
+          super();
+          // stateを設定
+          this.state ={
+            counters:[
+              {id: 'A', count: 0, color: 'tomato'},
+              {id: 'B', count: 0, color: 'skyblue'},
+              {id: 'C', count: 0, color: 'limegreen'}
+            ],
+            total: 0
+          };
+          // クラス内関数の呼び出しで使用するthisはbindしないと呼び込めない
+          this.countUp = this.countUp.bind(this);
+        }
+      
+        countUp(counter){
+          // setStateの引数がオブジェクトであった場合、即時に更新される保障はない。関数を引数に渡す場合は即時に実行される。
+
+          this.setState(prevState => {
+            const counters = prevState.counters.map(counter =>{
+              return {id: counter.id, count: counter.count, color: counter.color};
+            });
+            const pos = counters.map(counter => {
+              return counter.id;
+            }).indexOf(counter.id);
+            counters[pos].count++;
+            return{
+              counters: counters,
+              total: prevState.total + 1
+            };
+          })
+        }
+
+        render(){
+          return(
+            <div className="container">
+              <CounterList
+                counters={this.state.counters}
+                countUp={this.countUp}
+              />
+              <div>TOTAL INVENTORY: {this.state.total}</div>
+            </div>
+          );
+        }
+      }
+      function CounterList(props){
+        // mapでcounters(pros)をループしてprops渡したCounterコンポーネントを返す
+        const counters = props.counters.map(counter  =>{
+          return(
+            <Counter 
+              counter={counter}
+              // ループする要素はKey（ユニーク）値を設定する
+              key={counter.id}
+              // 親要素にcountUpのpropsを付ける
+              countUp={props.countUp}
+            />
+          );
+        });
+        return(
+          <ul>
+            {counters}
+            </ul>
+            );
+          }
+          
+        function Counter(props){
+          return(
+            <li style={{backgroundColor:props.counter.color}} 
+              onClick={()=> props.countUp(props.counter)}>
+              {props.counter.id}:{props.counter.count}
+            </li>
+          );
+        }
+
+      // JSX 何を（HTMLパーツ），とこに（要素取得指定）
+      ReactDOM.render(
+        <App/>,
+        document.getElementById('root')
+      );
+
+    })();
+  </script>
+</body>
+</html>
