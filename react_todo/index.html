@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>React Todo App</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    (() =>{
+
+      function TodoItem(props){
+        // input checked(最初の状態) = true or false
+        // onChange ボックスの値が変わった時に実行されるアクション
+        // classNameをisDone(false or true)に設定して、チェックの有無でCSSを付ける
+        return(
+          <li>
+            <label>
+              <input type="checkbox"
+              checked={props.todo.isDone}
+              onChange={() => props.checkTodo(props.todo)}
+              />
+              <span className={props.todo.isDone ? 'done' : ''}>
+                {props.todo.title}
+              </span>
+            </label>
+            <span className="cmd"
+            onClick={()=> props.deleteTodo(props.todo)}>[×]</span>
+          </li>
+        )
+      }
+
+      function TodoList(props){
+          // Appクラスからprops.todosを受け取りTodoListのpropsに設定
+          // ループで回す場合propsにkey(重複しない値)を設定
+        const todos = props.todos.map(todo =>{
+          return(
+            <TodoItem 
+              key={todo.id}
+              todo={todo}
+              checkTodo={props.checkTodo}
+              deleteTodo={props.deleteTodo}
+            />);
+        });
+        // todosが全て削除された場合の三項条件式
+        return(
+          <ul>
+            {props.todos.length ? todos : <li>Nothing to do!</li>}
+          </ul>
+        );
+      }
+
+      // form入力など、UIの変更はsetStateでのみ可能なため、onClickやonChangeなどでsetStateを含む関数を実行する必要あり
+      function TodoForm(props){
+        return(
+          <form onSubmit={props.addTodo}>
+            <input type="text" value={props.item} onChange={props.updateItem}/>
+            <input type="submit" value="Add"/>
+          </form>
+        )
+      }
+
+      const todos = [];
+
+      function TodoHeader(props){
+        // filter:todosの中からisDoneでない要素を抜き出す
+        const remaining = props.todos.filter(todo =>{
+          return !todo.isDone;
+        });
+
+        return(
+          <h1>
+            <button onClick={props.purge}>Purge checked Todos</button>
+            My todos
+            <span>({remaining.length}/{props.todos.length})</span>
+          </h1>
+        )
+      }
+
+      function getUniqueId(){
+        return new Date().getTime().toString(36) + '-' + Math.random().toString(36);
+      }
+
+      class App extends React.Component{
+        // クラスのstateの変更はconstructorに記載
+        constructor(){
+          super();
+          this.state={
+            todos: todos,
+            item: ''
+          };
+          this.checkTodo = this.checkTodo.bind(this);
+          this.deleteTodo = this.deleteTodo.bind(this);
+          this.updateItem = this.updateItem.bind(this);
+          this.addTodo = this.addTodo.bind(this);
+          this.purge = this.purge.bind(this);
+        }
+
+        purge(){
+          if(!confirm('are you sure?')){
+            return;
+          }
+
+          const todos = this.state.todos.filter(todo =>{
+            return !todo.isDone;
+          });
+          this.setState({
+            todos: todos
+          });
+        }
+
+        checkTodo(todo){
+          // state.todosのコピー配列を作成
+          const todos = this.state.todos.map(todo =>{
+            return {id: todo.id, title: todo.title, isDone: todo.isDone};
+          });
+          // idのみを配列化して、クリックされたコンポーネントのid番号を取得
+          const pos = this.state.todos.map(todo =>{
+            return todo.id;
+          }).indexOf(todo.id);
+
+          // クリックされたコンポーネントのtrueとfalseを入れ替える
+          todos[pos].isDone = !todos[pos].isDone;
+          // 変更したtodosをsetState
+          this.setState({
+            todos: todos
+          });
+        }
+
+        deleteTodo(todo){
+          if(!confirm('are you sure?')){
+            return;
+          }
+          // stateのvalueまでは変更しないため、配列第一層（key）までのコピー配列をsliceで作成
+          const todos = this.state.todos.slice();
+          const pos = this.state.todos.indexOf(todo);
+
+          // spliceでpos番目から1つの配列を削除
+          todos.splice(pos, 1);
+          this.setState({
+            todos: todos
+          });
+        }
+
+        updateItem(e){
+          this.setState({
+            // target:イベントを発生させたオブジェクト(form).そのvalueを参照
+            // form入力欄にはvalue値が反映されるので、state.itemを適時更新していく
+            item: e.target.value
+          });
+        }
+
+        componentDidUpdate() {
+          localStorage.setItem('todos', JSON.stringify(this.state.todos));
+        }
+
+        componentDidMount() {
+          this.setState({
+            todos: JSON.parse(localStorage.getItem('todos')) || []
+          });
+        }
+
+
+        addTodo(e){
+          // 画面遷移の防止
+          e.preventDefault();
+
+          // submitが空で行われないようitemの文字列がから出ないかチェック
+          if(this.state.item.trim() === ''){
+            return;
+          }
+
+          const item = {
+            id: getUniqueId(),
+            // itemは既にstateで定義されていて、フォームでのキー入力で適時更新されているのでtitleに引用
+            title: this.state.item,
+            isDone: false
+          };
+          const todos = this.state.todos.slice();
+          todos.push(item);
+          this.setState({
+            todos: todos,
+            // submitの後にitemを空にする
+            item:''
+          });
+
+        }
+
+        render(){
+          return(
+            // state.todosをpropsとして設定
+          <div className="container">
+            <TodoHeader
+              todos={this.state.todos}
+              purge={this.purge}
+            />
+            <TodoList 
+              todos={this.state.todos}
+              checkTodo={this.checkTodo}
+              deleteTodo={this.deleteTodo}
+            />
+            <TodoForm
+              item={this.state.item}
+              updateItem={this.updateItem}
+              addTodo={this.addTodo}
+            />
+          </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <App/>,
+        document.getElementById('root')
+      );
+
+    })();
+  </script>
+</body>
+</html>

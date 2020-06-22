@@ -33,14 +33,22 @@
         countUp(counter){
           // setStateの引数がオブジェクトであった場合、即時に更新される保障はない。関数を引数に渡す場合は即時に実行される。
 
+          // countUpの引数はprops.counter = 各コンポーネントのstate配列が格納される
+
           this.setState(prevState => {
+            // state.counterのコピー配列を作成
             const counters = prevState.counters.map(counter =>{
               return {id: counter.id, count: counter.count, color: counter.color};
             });
+            // state.counter.idのみの配列を作成しクリックしたidが何番目の要素かindexOfで取得してposへ格納する
             const pos = counters.map(counter => {
               return counter.id;
             }).indexOf(counter.id);
+
+            // 取得した番目のstate.counterに+1
             counters[pos].count++;
+
+            // 変更した値でsetState
             return{
               counters: counters,
               total: prevState.total + 1
@@ -66,7 +74,7 @@
           return(
             <Counter 
               counter={counter}
-              // ループする要素はKey（ユニーク）値を設定する
+              // ループする要素はpropsにKey値(重複しない値を指定)を設定する
               key={counter.id}
               // 親要素にcountUpのpropsを付ける
               countUp={props.countUp}
